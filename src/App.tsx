@@ -4,6 +4,7 @@ import "bulma/css/bulma.min.css";
 import Reminder from "./models/reminder";
 import ReminderList from "./components/ReminderList";
 import reminderService from "./services/reminder";
+import NewReminder from "./components/NewReminder";
 
 function App() {
   const [reminders, setReminders] = useState<Array<Reminder>>([]);
@@ -21,13 +22,22 @@ function App() {
     setReminders(reminders.filter((reminder) => reminder.id !== id));
   };
 
+  const addReminder = async (title: string) => {
+    const newReminder = await reminderService.addReminder(title);
+    setReminders([newReminder, ...reminders]);
+  };
+
   return (
     <div className="App">
       <div className="main">
-        <ReminderList
-          items={reminders}
-          onRemoveReminder={removeReminder}
-        ></ReminderList>
+        <article className="panel is-primary">
+          <p className="panel-heading">Reminders</p>
+          <NewReminder onAddReminder={addReminder} />
+          <ReminderList
+            items={reminders}
+            onRemoveReminder={removeReminder}
+          ></ReminderList>
+        </article>
       </div>
     </div>
   );
